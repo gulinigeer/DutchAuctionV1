@@ -1,3 +1,6 @@
+# DutchAuctionV2
+<img width="1189" alt="WX20230217-020034@2x" src="https://user-images.githubusercontent.com/113514383/219449474-4e882513-2fea-4541-afa1-8b7821c49087.png">
+
 # DutchAuctionV1
 Remix Test
 1.Contract deployment: First, deploy the DutchAuction.sol contract and set the auction start time via the setAuctionStartTime() function. The starting time used in this example is, July 12, 2022 at 1:30, corresponding to utc time 1658338200.
