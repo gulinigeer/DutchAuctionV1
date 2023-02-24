@@ -42,9 +42,11 @@ describe("NFTDutchAuction", function () {
     //Bid Token mint
     Bid.approve(owner.address, 300000000);
     Bid.transferFrom(owner.address, otherAccount1.address, 100000);
+    console.log(await Bid.balanceOf(otherAccount1.address));
     Bid.transferFrom(owner.address, otherAccount2.address, 100);
-    Bid.approve(otherAccount1.address, 100000);
-    Bid.approve(otherAccount2.address, 100);
+    // Bid.approve(otherAccount1.address, 100000);
+    // Bid.approve(otherAccount2.address, 100);
+    console.log(await Bid.balanceOf(otherAccount1.address));
 
     return { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 };
   }
@@ -76,15 +78,21 @@ describe("NFTDutchAuction", function () {
 
     it("account bidding with lower price should return reminder info", async function () {
       const { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 } = await deployNFTDutchAuctionFixture();
-      var promise = NFTDutchAuction.connect(otherAccount2).auctionMint({value: 0, gasPrice: 15000000000});
+      var promise = NFTDutchAuction.connect(otherAccount2).auctionMint({gasPrice: 15000000000});
       expect(await NFTDutchAuction.ended()).to.equal(false);
     });
 
     it("account bidding with enough price should success", async function () {
       const { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 } = await deployNFTDutchAuctionFixture();
-      var promise = NFTDutchAuction.connect(otherAccount1).auctionMint({value: 0, gasPrice: 15000000000});
+      var promise = NFTDutchAuction.connect(otherAccount1).auctionMint({gasPrice: 15000000000});
       expect(await NFTDutchAuction.ended()).to.equal(false);
       // expect(await NFT.ownerOf(_nftTokenId)).to.equal(otherAccount1.address);
+    });
+
+    it("Bid Token transfer successfully", async function () {
+      const { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 } = await deployNFTDutchAuctionFixture();
+      var promise = Bid.transferFrom(owner.address, otherAccount2.address, 100, {gasPrice: 15000000000});
+      expect(await Bid.balanceOf(otherAccount2.address)).to.equal(200);
     });
 
   });

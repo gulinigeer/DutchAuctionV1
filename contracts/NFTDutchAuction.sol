@@ -58,12 +58,12 @@ contract NFTDutchAuction {
     }
 
     //A function to buy the NFT.
-    function auctionMint() external payable{
+    function auctionMint() external {
         require(!ended, "The auction has ended");
         require(block.number <= lastBlockNumber, "The auction has ended");
         uint256 auctionPrice = getAuctionPrice();
         require(bidToken.balanceOf(msg.sender) >= auctionPrice, "your bid is lower than set value");
-        //Use the transferFrom function of IERC721 to transfer nft. NFT will be identified with the help of nftId and will be transferred from the seller to the current msg.sender (i.e. the person currently interacting with the contract).
+        // Use the transferFrom function of IERC721 to transfer nft. NFT will be identified with the help of nftId and will be transferred from the seller to the current msg.sender (i.e. the person currently interacting with the contract).
         nft.transferFrom(owner, msg.sender, nftId);
         
         bidToken.transferFrom(msg.sender, owner, auctionPrice);
