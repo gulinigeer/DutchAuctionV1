@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, upgrades} from "hardhat";
 
 describe("NFTDutchAuction", function () {
   const reservePrice = 200;
@@ -33,8 +33,8 @@ describe("NFTDutchAuction", function () {
     const { NFT, Bid, owner, otherAccount1, otherAccount2 } = await deployBidFixture();
     //NFT mint
     NFT.mint(owner.address, _nftTokenId);
-    const NFTDutchAuctionFactory = await ethers.getContractFactory("NFTDutchAuction");
-    const NFTDutchAuction = await NFTDutchAuctionFactory.deploy(Bid.address, NFT.address, _nftTokenId, reservePrice, numBlocksAuctionOpen, offerPriceDecrement);
+    const NFTDutchAuctionFactory = await ethers.getContractFactory("NFTDutchAuction_ERC20Bids");
+    const NFTDutchAuction = await upgrades.deployProxy(NFTDutchAuctionFactory, [Bid.address, NFT.address, _nftTokenId, reservePrice, numBlocksAuctionOpen, offerPriceDecrement], {kind:'uups', initializer:'initialize'});
 
     //NFT approve
     NFT.approve(NFTDutchAuction.address, _nftTokenId);

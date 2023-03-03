@@ -2,19 +2,22 @@
 pragma solidity ^0.8.0;
 
 //Extend the IERC721 contract interface to use the ERC721 methods in this contract, we will need them for use with our NFT.
+
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-contract NFTDutchAuction {
-    IERC721 public immutable nft;
-    uint256 public immutable nftId;
+contract NFTDutchAuction_ERC20Bids is Initializable, UUPSUpgradeable{
+    IERC721 public nft;
+    uint256 public nftId;
 
-    IERC20 public immutable bidToken;
+    IERC20 public bidToken;
 
     uint256 public reservePrice;
     uint256 public numBlocksAuctionOpen;
     uint256 public offerPriceDecrement;
-    address payable public immutable owner;
+    address public owner;
     uint256 public lastBlockNumber;
     uint256 public initialPrice;
     bool public ended;
@@ -26,20 +29,18 @@ contract NFTDutchAuction {
     // The auction has not ended yet.
     error AuctionNotYetEnded();
 
-    //The above state variables are initialized in the constructor.
-    constructor(
+    function initialize(
         address erc20TokenAddress,
         address erc721TokenAddress,
         uint256 _nftTokenId,
         uint256 _reservePrice, 
         uint256 _numBlocksAuctionOpen, 
-        uint256 _offerPriceDecrement
-        ) payable{
+        uint256 _offerPriceDecrement) initializer public {
             reservePrice = _reservePrice;
             numBlocksAuctionOpen = _numBlocksAuctionOpen;
             offerPriceDecrement = _offerPriceDecrement;
             //Set the owner as the deployer of the contract.
-            owner = payable(msg.sender);
+            owner = msg.sender;
             lastBlockNumber = block.number + numBlocksAuctionOpen;
             initialPrice = reservePrice + numBlocksAuctionOpen * offerPriceDecrement;
             ended = false;
@@ -48,7 +49,10 @@ contract NFTDutchAuction {
             nftId = _nftTokenId;
 
             bidToken = IERC20(erc20TokenAddress);
+
     }
+    
+    function _authorizeUpgrade(address) internal override {}
 
     //A function named getAuctionPrice() to get the current price of the NFT.
     function getAuctionPrice() public view returns(uint256){
@@ -80,8 +84,7 @@ contract NFTDutchAuction {
             revert AuctionAlreadyEnded();
         require(msg.sender == owner,"only the owner of this contract can end the auction");
         
-        //Use the selfdestruct function to delete the contract and transfer the ETH to the seller.
-        selfdestruct(owner);
+        emit AuctionEnded(msg.sender, reservePrice);
     }
 
 }
