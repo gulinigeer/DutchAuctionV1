@@ -24,7 +24,7 @@ describe("NFTDutchAuction", function () {
     const { NFT, owner, otherAccount1, otherAccount2 } = await deployNFTFixture();
 
     const BidFactory = await ethers.getContractFactory("Bid");
-    const Bid = await BidFactory.deploy("Bid Token", "BID");
+    const Bid = await BidFactory.deploy("Bid", "BID");
     return { NFT, Bid, owner, otherAccount1, otherAccount2 };
   }
 
@@ -69,6 +69,57 @@ describe("NFTDutchAuction", function () {
       const { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 } = await deployNFTDutchAuctionFixture();
       expect(await NFTDutchAuction.nftId()).to.equal(_nftTokenId);
       console.log(await NFTDutchAuction.nftId());
+    });
+
+    it("offchain sign to permit tokens", async function () {
+      const { NFT, Bid, NFTDutchAuction, owner, otherAccount1, otherAccount2 } = await deployNFTDutchAuctionFixture();
+      const name = "Bid";
+      const version = "1";
+      const nonce = 0;
+      const deadline = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour from now
+      const value = ethers.utils.parseUnits("100", "ether");
+  
+      const domain = {
+        name,
+        version,
+        chainId: await owner.getChainId(),
+        verifyingContract: Bid.address,
+      };
+  
+      const types = {
+        Permit: [
+          { name: "owner", type: "address" },
+          { name: "spender", type: "address" },
+          { name: "value", type: "uint256" },
+          { name: "nonce", type: "uint256" },
+          { name: "deadline", type: "uint256" },
+        ],
+      };
+
+      const message = {
+        owner: owner.address,
+        spender: otherAccount1.address,
+        value,
+        nonce,
+        deadline,
+      };
+  
+      const signature = await owner._signTypedData(domain, types, message);
+      const sig = ethers.utils.splitSignature(signature);
+  
+      await Bid.permit(
+        owner.address,
+        otherAccount1.address,
+        value,
+        deadline,
+        sig.v,
+        sig.r,
+        sig.s
+      );
+  
+      expect(await Bid.allowance(owner.address, otherAccount1.address)).to.equal(
+        value
+      );
     });
 
   });

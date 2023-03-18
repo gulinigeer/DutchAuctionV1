@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
-
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 // contract NFT is ERC721 {
@@ -11,16 +10,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract NFT is IERC721 {
     using Address for address;
 
-    // Mapping from token ID to owner address
     mapping(uint => address) private _owners;
 
-    // Mapping owner address to token count
     mapping(address => uint) private _balances;
 
-    // Mapping from token ID to approved address
     mapping(uint => address) private _tokenApprovals;
 
-    // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
     function supportsInterface(bytes4 interfaceId)
