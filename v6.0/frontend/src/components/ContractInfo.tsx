@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { ChangeEvent, ReactElement, useState } from "react";
 import styled from "styled-components";
 import { Provider } from "../utils/provider";
+import Background from '../images/info.png';
 import BasicDutchAuctionArtifact from "../artifacts/contracts/BasicDutchAuction.sol/BasicDutchAuction.json";
 
 function getErrorMessage(error: Error): string {
@@ -39,6 +40,17 @@ const StyledButton = styled.button`
   cursor: pointer;
   place-self: center;
 `;
+
+const style = {
+  bgd: {
+    // backgroundAttachment: "fixed",
+    backgroundSize: 'contain',
+    backgroundColor: "white",
+    backgroundImage: `url(${Background})`,
+    backgroundRepeat: "no-repeat",
+    overflow: "hidden",
+  }
+}
 
 export function ContractInfo(): ReactElement {
   const context = useWeb3React<Provider>();
@@ -77,40 +89,81 @@ export function ContractInfo(): ReactElement {
 
   return (
     <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          gridGap: "1rem",
-        }}
-      >
-        <label>Contract Address: </label>
-        <input
-          onChange={handleContractAddressChange}
-          type="text"
-          value={contractAddress}
-        />
-        <span>
-          <StyledButton onClick={handleGetInfo}> Auction Info</StyledButton>
-        </span>
-      </div>
-
-      <h4>Auction Info: </h4>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          gridGap: "1rem",
-        }}
-      >
-        <label> Winner: </label>
-        <input type="text" value={winner} readOnly />
-        <label> Current Price: </label>
-        <input type="text" value={currentPriceLookUp} readOnly />
-        <label> Reserve Price: </label>
-        <input type="text" value={reservePriceLookUp} readOnly />
-        <label> Price Decrement: </label>
-        <input type="text" value={priceDecrementLookUp} readOnly />
+      <div style={style.bgd}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <h4>Auction Info</h4>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label>Contract Address: </label>
+          <input
+            onChange={handleContractAddressChange}
+            type="text"
+            value={contractAddress}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <span>
+            <StyledButton onClick={handleGetInfo}> Info </StyledButton>
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label> Winner: </label>
+          <input type="text" value={winner} readOnly />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label> Current Price: </label>
+          <input type="text" value={currentPriceLookUp} readOnly />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label> Reserve Price: </label>
+          <input type="text" value={reservePriceLookUp} readOnly />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label> Price Decrement: </label>
+          <input type="text" value={priceDecrementLookUp} readOnly />
+        </div>
       </div>
     </>
   );

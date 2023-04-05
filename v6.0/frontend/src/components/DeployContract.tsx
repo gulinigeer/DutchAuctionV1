@@ -8,6 +8,22 @@ import { ReactElement, useEffect, useState, MouseEvent } from "react";
 import { Provider } from "../utils/provider";
 import BasicDutchAuctionArtifact from "../artifacts/contracts/BasicDutchAuction.sol/BasicDutchAuction.json";
 import styled from "styled-components";
+import Background from '../images/deploy.png';
+import { getParseTreeNode } from "typescript";
+const style = {
+  bgd: {
+    // display: "grid",
+    // gridTemplateColumns: "1fr 1fr 1fr 1fr",
+    // gridGap: "1rem",
+    // color: 'rgba(0,0,0,.25)',
+    backgroundImage: `url(${Background})`,
+    backgroundSize: 'contain',
+    backgroundRepeat: "no-repeat",
+    // backgroundColor: "yellow",
+    // fontweight: "bolder",
+  }
+}
+
 
 function getErrorMessage(error: Error): string {
   switch (error.constructor) {
@@ -29,6 +45,7 @@ const StyledButton = styled.button`
   border-color: ${({ disabled }) => (disabled ? "unset" : "blue")};
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   place-self: center;
+  background-color: white;
 `;
 
 export function DeployContract(): ReactElement {
@@ -104,54 +121,87 @@ export function DeployContract(): ReactElement {
 
   return (
     <>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          gridGap: "1rem",
-        }}
-      >
-        <label>Reserve Price: </label>
-        <input
-          type="text"
-          pattern="[0-9]"
-          onChange={(event) => handleInputChange(event, setReservePrice)}
-          value={reservePrice}
-        />
-        <label>Auction Blocks: </label>
-        <input
-          type="text"
-          pattern="[0-9]"
-          onChange={(event) => handleInputChange(event, setAuctionBlocks)}
-          value={auctionBlocks}
-        />
-        <label>Price Decrement: </label>
-        <input
-          type="text"
-          pattern="[0-9]*"
-          onChange={(event) => handleInputChange(event, setPriceDecrement)}
-          value={priceDecrement}
-        />
-      </div>
-
-      <div>
-        <StyledButton
-          disabled={!active || !!basicDutchAuction}
-          onClick={handleDeployContract}
+      <div style={style.bgd}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
         >
-          Deploy
-        </StyledButton>
-      </div>
+          <h4>Deploy Auction</h4>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label>Reserve Price: </label>
+          <input
+            type="text"
+            pattern="[0-9]"
+            onChange={(event) => handleInputChange(event, setReservePrice)}
+            value={reservePrice}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label>Auction Blocks: </label>
+          <input
+            type="text"
+            pattern="[0-9]"
+            onChange={(event) => handleInputChange(event, setAuctionBlocks)}
+            value={auctionBlocks}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
+          <label>Price Decrement: </label>
+          <input
+            type="text"
+            pattern="[0-9]*"
+            onChange={(event) => handleInputChange(event, setPriceDecrement)}
+            value={priceDecrement}
+          />
+        </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          gridGap: "1rem",
-        }}
-      >
-        <label>Contract Address: </label>
-        <input type="text" value={contractAddress} readOnly />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "10px",
+            // alignItems: "center",
+          }}>
+          <StyledButton
+            disabled={!active || !!basicDutchAuction}
+            onClick={handleDeployContract}
+          >
+            Deploy
+          </StyledButton>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            // alignItems: "center",
+          }}
+        >
+          <label>Contract Address: </label>
+          <input type="text" value={contractAddress} readOnly />
+        </div>
       </div>
     </>
   );
