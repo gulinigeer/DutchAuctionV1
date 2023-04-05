@@ -20,9 +20,9 @@ export function App(): ReactElement {
       <WalletStatus />
       <SectionDivider />
       <DeployContract />
-      {/* <SectionDivider /> */}
+       <SectionDivider />
       <ContractInfo />
-      {/* <SectionDivider /> */}
+       <SectionDivider />
       <Bid />
       <SectionDivider />
     </StyledAppDiv>
