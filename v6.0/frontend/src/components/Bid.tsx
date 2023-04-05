@@ -50,9 +50,8 @@ const Bid = (): ReactElement => {
       BasicDutchAuctionArtifact.abi,
       library.getSigner()
     );
-    const [info, currentPrice] = await Promise.all([
-      basicDutchAuction.getInfo(),
-      basicDutchAuction.currentPrice(),
+    const [currentPrice] = await Promise.all([
+      basicDutchAuction.getPrice(),
     ]);
     if (bidAmount < currentPrice) {
       window.alert(

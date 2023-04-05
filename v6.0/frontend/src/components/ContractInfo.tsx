@@ -91,11 +91,11 @@ export function ContractInfo(): ReactElement {
           value={contractAddress}
         />
         <span>
-          <StyledButton onClick={handleGetInfo}> Show Info</StyledButton>
+          <StyledButton onClick={handleGetInfo}> Auction Info</StyledButton>
         </span>
       </div>
 
-      <h4>Dutch Auction Info: </h4>
+      <h4>Auction Info: </h4>
       <div
         style={{
           display: "grid",

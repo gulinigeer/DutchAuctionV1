@@ -150,7 +150,7 @@ export function DeployContract(): ReactElement {
           gridGap: "1rem",
         }}
       >
-        <label>Dutch Auction Contract Address: </label>
+        <label>Contract Address: </label>
         <input type="text" value={contractAddress} readOnly />
       </div>
     </>
