@@ -43,7 +43,7 @@ contract BasicDutchAuction {
   }
 
   //A function to buy.
-  function bid() external payable returns (address) {
+  function bid(uint256 _amount) external payable returns (address) {
     //A check to ensure that the current block quantity ensures that the asking price is not lower than the minimum price, and an error message is displayed if the check fails.
     require(!ended, "This auction has ended");
     require(block.number <= auctionEndBlock, "This auction has ended");
@@ -52,12 +52,12 @@ contract BasicDutchAuction {
     uint256 price = getPrice();
 
     //Check to ensure that the amount of ETH sent by the bidder/buyer ( msg.value ) is always greater than or equal to the current price, if the check fails an error message will be displayed.
-    require(msg.value >= price, "The bid is less than the price");
+    require(_amount >= price, "The bid is less than the price");
 
     winner = payable(msg.sender);
-    amount = msg.value;
+    amount = _amount;
     ended = true;
-    payable(msg.sender).transfer(amount);
+//    payable(msg.sender).transfer(amount);
     emit AuctionEnded(winner, amount);
     return winner;
   }

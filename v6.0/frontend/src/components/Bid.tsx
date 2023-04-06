@@ -79,9 +79,7 @@ const Bid = (): ReactElement => {
       return;
     }
     try {
-      const bid = await basicDutchAuction.bid({
-        value: ethers.BigNumber.from(bidAmount),
-      });
+      const bid = await basicDutchAuction.bid(ethers.BigNumber.from(bidAmount));
       await bid.wait();
       if (bid) {
         window.alert("Bid successful");
